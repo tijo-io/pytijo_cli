@@ -3,7 +3,7 @@ import click
 import sys
 import json
 from subprocess import check_output
-from structifytext import parser
+from pytijo import parser
 
 @click.command(name='tijo', context_settings=dict(
     ignore_unknown_options=True,
