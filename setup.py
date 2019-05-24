@@ -1,21 +1,32 @@
 from setuptools import setup
 
-from os import listdir
-from os.path import isfile, join
+import os
+import re
 
-# TEMPLATES_DIR='tijocli/templates'
-# templates = ["{}/{}".format(TEMPLATES_DIR,f) for f in listdir(TEMPLATES_DIR) if isfile(join(TEMPLATES_DIR, f))]
+if os.environ.get("CI_COMMIT_TAG"):
+    version = os.environ["CI_COMMIT_TAG"]
+    if version.startswith("v"):
+        version = version[1:]
+        if not re.search(r"^\d+\.\d+\.\d+$", version):
+            raise AttributeError(
+                "given CI_COMMIT_TAG {} incorrect format. It must be vX.Y.Z or X.Y.Z format".format(
+                    os.environ["CI_COMMIT_TAG"]
+                )
+            )
+elif os.environ.get("CI_JOB_ID"):
+    version = os.environ["CI_JOB_ID"]
+else:
+    version = None
 
 setup(
     zip_safe=True,
-    name="tijocli",
-    version="0.1",
+    name="pytijo_cli",
     author="Jon Castro",
     author_email="jon@tijo.io",
-    packages=["tijocli"],
+    packages=["pytijo_cli"],
     #    data_files=[(TEMPLATES_DIR, templates)],
     description="Tijo Command line interface",
     license="LICENSE",
     install_requires=["click", "pytijo"],
-    entry_points={"console_scripts": ["tijo = tijocli.cli:main"]},
+    entry_points={"console_scripts": ["tijo = pytijo_cli.cli:main"]},
 )
