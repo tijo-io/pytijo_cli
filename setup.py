@@ -21,6 +21,7 @@ else:
 setup(
     zip_safe=True,
     name="pytijo_cli",
+    version=version,
     author="Jon Castro",
     author_email="jon@tijo.io",
     packages=["pytijo_cli"],
