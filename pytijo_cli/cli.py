@@ -34,7 +34,7 @@ def tijo(ctx, tijo_template, tijo_output_beauty):
 
     result = parser.parse(output, template)
     output = json.dumps(result, indent=4) if tijo_output_beauty else result
-    print(output)
+    click.echo(output)
 
 
 def main():
