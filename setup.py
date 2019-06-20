@@ -28,6 +28,6 @@ setup(
     #    data_files=[(TEMPLATES_DIR, templates)],
     description="Tijo Command line interface",
     license="LICENSE",
-    install_requires=["click", "pytijo"],
+    install_requires=["click", "pytijo", "pytijo_finder"],
     entry_points={"console_scripts": ["tijo = pytijo_cli.cli:main"]},
 )

@@ -3,6 +3,7 @@ import sys
 import json
 from subprocess import check_output
 from pytijo import parser
+from pytijo_finder import command
 
 
 @click.command(
@@ -11,8 +12,18 @@ from pytijo import parser
 )
 @click.option("--tijo-template", type=click.File())
 @click.option("--tijo-output-beauty", is_flag=True, default=False)
+@click.option(
+    "--tijo-base-api",
+    type=click.STRING,
+    default="http://api.tijo.io/v1",
+    envvar="TIJO_API",
+)
+@click.option("--tijo-insecure", is_flag=True, default=False)
+@click.option("--tijo-timeout", type=click.INT, default=60)
 @click.pass_context
-def tijo(ctx, tijo_template, tijo_output_beauty):
+def tijo(
+    ctx, tijo_template, tijo_output_beauty, tijo_base_api, tijo_insecure, tijo_timeout
+):
     if len(ctx.args) <= 0 and tijo_template is None:
         print("--tijo-template is required if a command is not provided")
         raise click.Abort()
@@ -21,10 +32,16 @@ def tijo(ctx, tijo_template, tijo_output_beauty):
     if tijo_template:
         template = json.load(tijo_template)
     else:
-        # TODO: find the template from tijo repository
-        print("pending to implement discover the template")
-        raise click.Abort()
-        pass
+        cmd = command.Command(
+            ctx.args,
+            tijo_api=tijo_base_api,
+            insecure=tijo_insecure,
+            timeout=tijo_timeout,
+        )
+        template = cmd.get_template()
+        if template is None:
+            print("template not found")
+            raise click.Abort()
 
     output = None
     if len(ctx.args) <= 0:
