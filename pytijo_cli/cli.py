@@ -20,9 +20,16 @@ from pytijo_finder import command
 )
 @click.option("--tijo-insecure", is_flag=True, default=False)
 @click.option("--tijo-timeout", type=click.INT, default=60)
+@click.option("--tijo-disable-cache", is_flag=True, default=False)
 @click.pass_context
 def tijo(
-    ctx, tijo_template, tijo_output_beauty, tijo_base_api, tijo_insecure, tijo_timeout
+    ctx,
+    tijo_template,
+    tijo_output_beauty,
+    tijo_base_api,
+    tijo_insecure,
+    tijo_timeout,
+    tijo_disable_cache,
 ):
     if len(ctx.args) <= 0 and tijo_template is None:
         print("--tijo-template is required if a command is not provided")
@@ -38,7 +45,7 @@ def tijo(
             insecure=tijo_insecure,
             timeout=tijo_timeout,
         )
-        template = cmd.get_template()
+        template = cmd.get_template(disable_cache=tijo_disable_cache)
         if template is None:
             print("template not found")
             raise click.Abort()
