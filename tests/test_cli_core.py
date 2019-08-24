@@ -1,8 +1,8 @@
 import os
-import click
-from pytijo_cli.cli import tijo
-import json
-from click.testing import CliRunner
+
+# from pytijo_cli.cli import tijo
+# import json
+# from click.testing import CliRunner
 
 
 def get_test_file(filename):
