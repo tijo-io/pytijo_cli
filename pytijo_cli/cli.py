@@ -3,24 +3,40 @@ import sys
 import json
 from subprocess import check_output
 from pytijo import parser
-from pytijo_finder import command
+from pytijo_api_client import command
 
 
 @click.command(
     name="tijo",
     context_settings=dict(ignore_unknown_options=True, allow_extra_args=True),
+    help="Tijo command line. Just execute 'tijo <any-command>' and tijo will the most suitable template to parse the output of the given command. The output is printed in json format.",
 )
-@click.option("--tijo-template", type=click.File())
-@click.option("--tijo-output-beauty", is_flag=True, default=False)
+@click.option(
+    "--tijo-template", type=click.File(), help="A tijo template file to be used"
+)
+@click.option(
+    "--tijo-output-beauty", is_flag=True, default=False, help="Beautify json output"
+)
 @click.option(
     "--tijo-base-api",
     type=click.STRING,
     default="http://api.tijo.io/v1",
     envvar="TIJO_API",
+    help="Tijo base REST API endpoint",
 )
-@click.option("--tijo-insecure", is_flag=True, default=False)
-@click.option("--tijo-timeout", type=click.INT, default=60)
-@click.option("--tijo-disable-cache", is_flag=True, default=False)
+@click.option(
+    "--tijo-insecure",
+    is_flag=True,
+    default=False,
+    help="Allow insecure https connections. SSL certificates are not validated if this option is given.",
+)
+@click.option("--tijo-timeout", type=click.INT, default=60, help="HTTP(s) timeout")
+@click.option(
+    "--tijo-disable-cache",
+    is_flag=True,
+    default=False,
+    help="Disable local cache to force obtaining the template from the Tijo API.",
+)
 @click.pass_context
 def tijo(
     ctx,
