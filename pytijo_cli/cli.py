@@ -70,7 +70,7 @@ def tijo(
     if len(ctx.args) <= 0:
         output = "".join(sys.stdin)
     else:
-        output = check_output(ctx.args)
+        output = check_output(ctx.args).decode("utf-8")
 
     result = parser.parse(output, template)
     output = json.dumps(result, indent=4) if tijo_output_beauty else result
