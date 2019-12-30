@@ -32,7 +32,7 @@ setup(
     entry_points={
         "console_scripts": [
             "tijo = pytijo_cli.cli:main",
-            "tijo-push = pytijo_cli.push:main",
+            "tijo-adm = pytijo_cli.adm:main",
         ]
     },
 )

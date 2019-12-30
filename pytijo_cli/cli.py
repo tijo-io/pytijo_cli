@@ -3,7 +3,7 @@ import sys
 import json
 from subprocess import check_output
 from pytijo import parser
-from pytijo_api_client import command
+from pytijo_api_client import tijoapi, command
 
 
 @click.command(
@@ -55,13 +55,11 @@ def tijo(
     if tijo_template:
         template = json.load(tijo_template)
     else:
-        cmd = command.Command(
-            ctx.args,
-            tijo_api=tijo_base_api,
-            insecure=tijo_insecure,
-            timeout=tijo_timeout,
+        api = tijoapi.TijoApi(
+            tijo_api=tijo_base_api, insecure=tijo_insecure, timeout=tijo_timeout,
         )
-        template = cmd.get_template(disable_cache=tijo_disable_cache)
+        cmd = command.Command(ctx.args,)
+        template = cmd.get_template(api, disable_cache=tijo_disable_cache)
         if template is None:
             print("template not found")
             raise click.Abort()
