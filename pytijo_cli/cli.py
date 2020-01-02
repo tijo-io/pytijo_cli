@@ -3,7 +3,8 @@ import sys
 import json
 from subprocess import check_output
 from pytijo import parser
-from pytijo_api_client import tijoapi, command
+from pytijo_api_client.tijoapi import TijoApi
+from pytijo_api_client.command import Command
 
 
 @click.command(
@@ -15,7 +16,10 @@ from pytijo_api_client import tijoapi, command
     "--tijo-template", type=click.File(), help="A tijo template file to be used"
 )
 @click.option(
-    "--tijo-output-beauty", is_flag=True, default=False, help="Beautify json output"
+    "--tijo-output-single-line",
+    is_flag=True,
+    default=False,
+    help="Print the output in a single line",
 )
 @click.option(
     "--tijo-base-api",
@@ -41,7 +45,7 @@ from pytijo_api_client import tijoapi, command
 def tijo(
     ctx,
     tijo_template,
-    tijo_output_beauty,
+    tijo_output_single_line,
     tijo_base_api,
     tijo_insecure,
     tijo_timeout,
@@ -55,10 +59,10 @@ def tijo(
     if tijo_template:
         template = json.load(tijo_template)
     else:
-        api = tijoapi.TijoApi(
+        api = TijoApi(
             tijo_api=tijo_base_api, insecure=tijo_insecure, timeout=tijo_timeout,
         )
-        cmd = command.Command(ctx.args,)
+        cmd = Command(ctx.args,)
         template = cmd.get_template(api, disable_cache=tijo_disable_cache)
         if template is None:
             print("template not found")
@@ -71,7 +75,7 @@ def tijo(
         output = check_output(ctx.args)
 
     result = parser.parse(output, template)
-    output = json.dumps(result, indent=4) if tijo_output_beauty else result
+    output = result if tijo_output_single_line else json.dumps(result, indent=4)
     click.echo(output)
 
 
